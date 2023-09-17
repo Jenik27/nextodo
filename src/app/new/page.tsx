@@ -1,0 +1,42 @@
+import Link from "next/link";
+import { prisma } from "@/db";
+import { redirect } from "next/navigation";
+
+async function createTodo(data: FormData) {
+  "use server";
+
+  const title = data.get("title") as string;
+  await prisma.todo.create({ data: { title } });
+  redirect("/");
+}
+
+export default function Page() {
+  return (
+    <>
+      <header className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl">New</h1>
+      </header>
+      <form action={createTodo} className="flex flex-col gap-2">
+        <input
+          type="text"
+          name="title"
+          className="border border-slate-700 bg-transparent text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none"
+        />
+        <div className="flex gap-1 justify-end">
+          <Link
+            href=".."
+            className="border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            className="border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </>
+  );
+}
